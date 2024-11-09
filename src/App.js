@@ -5,7 +5,6 @@ import Footer from './Footer';
 import './index';
 
 function App() {
-  const name = "Dave";
   return (
     <div className="App">
       <Header/>
