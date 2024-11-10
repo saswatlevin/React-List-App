@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FaTrashAlt } from 'react-icons/fa';
 
 const Content = () => {
     
@@ -12,36 +13,84 @@ const Content = () => {
     // name as GETTER (similar to getter function in object).   
     // setName as SETTER (similar to setter function in object).
     
-    const [name, setName] = useState('Dave');
+    //const [name, setName] = useState('Dave');
+    const [items, setItems] = useState([
+        {
+            id: 1,
+            checked: false,
+            item: "item 1"
+        },
+
+        {
+            id: 2,
+            checked: false,
+            item: "item 2"
+        },
+
+        {
+            id: 3,
+            checked: false,
+            item: "item 3"
+        }
+    ]);
     
-    const [count, setCount] = useState(0);
-    
-    const handleNameChange = () => {
-        const names = ["Ann", "Mary", "Dave"];
-        const index = Math.floor(Math.random() * 3);
-
-        // This allows the value of names[index] to be the FUTURE STATE.
-        setName(names[index]);
-    };
-
-    const handleClick = () => {
-        setCount(count + 1);
-        console.log(count);
-    };
-
-    /*const handleClick2 = (name) => {
-        console.log(`${name} was clicked.`);
-    }*/
-
-    const handleClick3 = (myEvent) => {
-        console.log("The event is ", myEvent);
+    // Takes the list item key as an argument.
+    const handleCheck = (id) => {
+        console.log(`key: ${id}`);
+        // Map iterates over each list item
+        // The conditional statement in it finds the clicked element
+        // and negates its current checked value (true to false and vice-versa).
+        const listItems = items.map((item) => item.id === id ? { ...item, checked: !item.checked }: item);
+        setItems(listItems);
+        localStorage.setItem('shoppingList', JSON.stringify(listItems));
     };
     
+    const handleDelete = (id) => {
+        // Create a list of listitems without the selected listitem
+        const listItems = items.filter((item) => item.id !== id);
+        // Set the listitems.
+        setItems(listItems);
+        if (listItems.length === 0){
+
+           console.log("The list is empty"); 
+        }
+        // Put the listitems in local storage.
+        localStorage.setItem('shoppingList', JSON.stringify(listItems));
+    } 
+
     return (
     <main>
-        <button onClick={handleNameChange}>Change Name</button>
-        <button onClick={handleClick}>Change Count</button>
-        <button onClick={(myEvent) => handleClick3(myEvent)}>Click to See Event</button>
+        {items.length ? (
+        <ul>
+            {/* List items are displayed using map()
+                Map iterates over each list item.
+                Each list item in RJS needs a key.
+                The key helps RJS understand which items have been changed, added / deleted.
+                This is because RJS reacts to changes and re-renders the JSX.
+                Thus, a list item needs a key in RJS.
+
+            */}
+            {items.map((item) => (
+                <li className = "item" key = {item.id}>
+                    <input
+                        type = "checkbox"
+                        onChange = {() => handleCheck(item.id)}
+                        checked = {item.checked}
+                    />
+                    <label>{item.item}</label>
+                    <FaTrashAlt
+                        onClick = {() => handleDelete(item.id)}
+                        role = "button"
+                        tabIndex = "0"
+                    />
+                </li>
+            ))}
+        </ul>
+        ) : (
+            // The outer pair of curly braces indicates that there's an expression.
+            // The inner pair of curly braces indicates that there's a style.
+            <p style = {{marginTop: '2rem'}}>Your list is empty.</p>
+        )}    
     </main>
   );
 };
