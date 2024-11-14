@@ -1,7 +1,7 @@
 import { FaPlus } from 'react-icons/fa';
 import { useRef } from 'react';
 
-const addItem = ({newItem, setNewItem, handleSubmit}) => {
+const AddItem = ({newItem, setNewItem, handleSubmit}) => {
   const inputRef = useRef();
 
   return (
@@ -35,4 +35,4 @@ const addItem = ({newItem, setNewItem, handleSubmit}) => {
   );
 };
 
-export default addItem;
+export default AddItem;
