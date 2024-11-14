@@ -5,7 +5,7 @@ import AddItem from './AddItem';
 import Content from './Content';
 import Footer from './Footer';
 import './index';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
   
@@ -27,16 +27,12 @@ function App() {
     const [newItem, setNewItem] = useState('');
 
     const [search, setSearch] = useState('');
-  
-    // Add new items to the shopping list and store it in local storage.
-    const setAndSaveItems = (newItems) => {
-      // Set the new state.
-      setItems(newItems);
 
-      // Save the list in local storage.
-      localStorage.setItem('shoppingList', JSON.stringify(newItems));
-    };
+    useEffect(() => {
+      localStorage.setItem('shoppingList', JSON.stringify(items));
+    }, [items]);
   
+    
     // Create a new item to be added to the shopping list
     const addItem = (item) => {
       // Get the id of the new item from the list and add 1 to it (the new item will be the last item on the list).
@@ -47,21 +43,22 @@ function App() {
     
       // Add the item to the list using the spread operator.
       const listItems = [...items, myNewItem];
-    
-      // Save the list in local storage.
-      setAndSaveItems(listItems);
+      
+      // Set the listitems.
+      setItems(listItems);
     };
 
     // Takes the list item key as an argument.
     const handleCheck = (id) => {
         console.log(`key: ${id}`);
+        
         // Map iterates over each list item
         // The conditional statement in it finds the clicked element
         // and negates its current checked value (true to false and vice-versa).
         const listItems = items.map((item) => item.id === id ? { ...item, checked: !item.checked }: item);
-        //setItems(listItems);
-        //localStorage.setItem('shoppingList', JSON.stringify(listItems));
-        setAndSaveItems(listItems);
+        
+        // Set the listitems.
+        setItems(listItems);
     };
   
     const handleDelete = (id) => {
@@ -74,11 +71,8 @@ function App() {
         }
 
         // Set the listitems.
-        //setItems(listItems);
-        // Put the listitems in local storage.
-        //localStorage.setItem('shoppingList', JSON.stringify(listItems));
+        setItems(listItems);
         
-        setAndSaveItems(listItems);
     }; 
   
     // Handles the submission of a new item in the list.
